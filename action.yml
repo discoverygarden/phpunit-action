@@ -1,0 +1,168 @@
+---
+name: PHPUnit Action
+author: discoverygarden
+description: Runs configured PHPUnit Tests implemented in called repository.
+
+inputs:
+  composer-auth:
+    description: 'Composer auth token necessary for accessing our composer project.'
+    required: true
+  composer_package:
+    description: "Composer project reference. (ex. discoverygarden/dgi_group) it's only necessary to provide this if the composer package differs from the repository name."
+    required: false
+    default: "${{ github.repository }}"
+  drupal_extension:
+    description: "The module name for enabling within drupal. (Ex. discoverygarden/module would be `module`). It's only necessary to provide this if the module name differs from the repository name."
+    required: false
+    default: "${{ github.event.repository.name }}"
+  composer_patches:
+    description: 'Additional composer patches that might be necessary to run the workflow.'
+    required: false
+  composer_package_prerequisites:
+    description: 'require-dev modules required for the module.'
+    required: false
+  drupal_root:
+    description: 'The root drupal directory. (Default: /opt/drupal)'
+    default: /opt/drupal
+  drupal_web_root:
+    description: 'The drupal web root directory. (Default: /opt/drupal/web)'
+    default: /opt/drupal/web
+  postgres_db:
+    description: 'The postgres database name. (Default: drupal)'
+    default: drupal
+  postgres_user:
+    description: 'The postgres database user. (Default: drupal)'
+    default: drupal
+  postgres_password:
+    description: 'The postgress database user password. (Default: drupal)'
+    default: drupal
+  apache_user:
+    description: 'The apache user. (Default: www-data)'
+    default: www-data
+  apache_user_group:
+    description: 'The apache user group. (Default: www-data)'
+    default: www-data
+
+runs:
+  using: "composite"
+  steps:
+    - name: Grab additional packages
+      run: |
+        echo "::group::Installing drupal and composer"
+        # postgresql-client required for drush's site installation process
+        # git required to grab repo as repo via actions/checkout
+        apt update
+        apt install -y postgresql-client git
+        apt install -y jq
+      shell: bash
+    - name: Checkout Repo
+      uses: actions/checkout@v2
+    - name: Misc setup
+      working-directory: ${{ inputs.drupal_root }}
+      run: |
+        set -eux
+        # XXX: When running inside a container, it skips the entry point,
+        # so... let's kick off the Apache process.
+        apache2ctl start
+        # Install Drush.
+        composer require "drush/drush:^10"
+        # Install the site.
+        drush --uri=http://localhost --yes -v site:install minimal --db-url="pgsql://${{ inputs.postgres_user }}:${{ inputs.postgres_password }}@postgres/${{ inputs.postgres_db}}"
+        # Configure access and install our module.
+        echo '${{ inputs.composer-auth }}' > auth.json
+        # Setup our repos.
+        # XXX: We don't want the default Drupal thing first (it'll be readded
+        # later).
+        composer config --unset repositories.0
+        # We need to specify things in the _opposite_ order than what we want.
+        # XXX: Some repos are in an odd state, between different repos... so
+        # let's throw 'em in.
+        composer config --json -- repositories.islandora \
+          '{"type": "git", "url": "https://github.com/Islandora/islandora.git"}'
+        composer config --json -- repositories.drupal \
+          '{"type": "composer", "url": "https://packages.drupal.org/8", "canonical": false}'
+        composer config --json -- repositories.private_packagist \
+          '{"type": "composer", "url": "https://repo.packagist.com/discoverygarden/", "canonical": false}'
+        composer config --json -- repositories.actions \
+          "{\"type\": \"path\", \"url\": \"$GITHUB_WORKSPACE\"}"
+        composer config -- repo.packagist false
+
+        # Dump out the configured repositories.
+        composer config repositories
+        if [ -n '${{ env.COMPOSER_PATCHES }}' ] ; then
+          composer config -- allow-plugins.cweagans/composer-patches true
+          if [ -n '${{ env.ADDITIONAL_COMPOSER_PATCHES }}' ] ; then
+            echo '${{ env.COMPOSER_PATCHES }}' > patches.json
+            echo '${{ env.ADDITIONAL_COMPOSER_PATCHES }}' > additional_patches.json
+            composer config --json --merge -- extra.patches "$(jq -s '.[0] * .[1]' patches.json additional_patches.json)"
+          else
+            composer config --json --merge -- extra.patches '${{ env.COMPOSER_PATCHES }}'
+          fi
+          composer require "cweagans/composer-patches:^1.7"
+        fi
+        composer config minimum-stability dev
+        composer require ${{ env.COMPOSER_PACKAGE_PREREQUISITES }} ${{ env.ADDITIONAL_COMPOSER_PACKAGE_PREREQUISITES }} \
+          "${{ inputs.composer_package }}:dev-${{ github.base_ref }}#${{ github.sha }}"
+
+        # Install the module.
+        drush --uri=http://localhost --yes -v en ${{ inputs.drupal_extension }}
+        # XXX: Trying to run PHPUnit complains w/o prophecy-phpunit:
+        # > Drupal requires Prophecy PhpUnit when using PHPUnit 9 or greater.
+        # > Please use 'composer require --dev phpspec/prophecy-phpunit:^2' to
+        # > ensure that it is present.
+        # ... so let's add it as well...
+        composer require --dev --update-with-all-dependencies "drupal/core-dev:^${{ matrix.drupal-version }}" phpspec/prophecy-phpunit:^2
+        chown -R $APACHE_USER:$APACHE_GROUP web/sites web/modules web/themes
+        echo "::endgroup::"
+      env:
+        # XXX: Installation of the module is presently a little funky...
+        # "require-dev" doesn't quite do the trick, as it's only usable at the
+        # root-project level.
+        COMPOSER_PACKAGE_PREREQUISITES: >-
+          "drupal/test_support:^1" \
+          "drupal/migrate_directory:dev-8.x-1.x-dgi as 1.x-dev"
+        ADDITIONAL_COMPOSER_PACKAGE_PREREQUISITES: ${{ inputs.composer_package_prerequisites }}
+        # Patches need to be publically accessible, presently (so no private PRs,
+        # at present).
+        COMPOSER_PATCHES: |-
+          {
+            "drupal/core": {
+              "Referencable unpublished nodes": "https://www.drupal.org/files/issues/2022-06-17/2845144-67.patch"
+            }
+          }
+        ADDITIONAL_COMPOSER_PATCHES: ${{ inputs.composer_patches }}
+        APACHE_USER: ${{ inputs.apache_user }}
+        APACHE_GROUP: ${{ inputs.apache_group }}
+      shell: bash
+    - name: Run PHPUnit tests (base)
+      env:
+        SIMPLETEST_BASE_URL: http://127.0.0.1
+        SIMPLETEST_DB: "pgsql://${{ inputs.postgres_user }}:${{ inputs.postgres_password }}@postgres/${{ inputs.postgres_db}}"
+        APACHE_USER: ${{ inputs.apache_user }}
+        DRUPAL_WEB_ROOT: ${{ inputs.drupal_web_root }}
+      working-directory: ${{ inputs.drupal_root }}
+      continue-on-error: ${{ matrix.experimental }}
+      run: |
+        echo "::group::Run PHPUnit tests (base)"
+        su "$APACHE_USER" -s /bin/bash <<-EOS
+        phpunit "--bootstrap=$DRUPAL_WEB_ROOT/core/tests/bootstrap.php" --group ${{ inputs.drupal_extension }} --verbose "$GITHUB_WORKSPACE"
+        EOS
+        echo "::endgroup::"
+      shell: bash
+    - name: Run PHPUnit tests (reporting deprecations)
+      env:
+        SIMPLETEST_BASE_URL: http://127.0.0.1
+        SIMPLETEST_DB: "pgsql://${{ inputs.postgres_user }}:${{ inputs.postgres_password }}@postgres/${{ inputs.postgres_db}}"
+        APACHE_USER: ${{ inputs.apache_user }}
+        DRUPAL_WEB_ROOT: ${{ inputs.drupal_web_root }}
+      working-directory: ${{ inputs.drupal_root }}
+      # XXX: A number of deprecation things in modules pulled in make a mess
+      # presently... so let's just report 'em, for now.
+      continue-on-error: true
+      run: |
+        echo "::group::Run PHPUnit tests (reporting deprecations)"
+        su "$APACHE_USER" -s /bin/bash <<-EOS
+        phpunit "--configuration=$DRUPAL_WEB_ROOT/core/phpunit.xml.dist" --group ${{ inputs.drupal_extension }} --verbose "$GITHUB_WORKSPACE"
+        EOS
+        echo "::endgroup::"
+      shell: bash
