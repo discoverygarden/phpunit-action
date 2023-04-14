@@ -119,8 +119,7 @@ runs:
         # "require-dev" doesn't quite do the trick, as it's only usable at the
         # root-project level.
         COMPOSER_PACKAGE_PREREQUISITES: >-
-          "drupal/test_support:^1" \
-          "drupal/migrate_directory:dev-8.x-1.x-dgi as 1.x-dev"
+          "drupal/test_support:^1"
         ADDITIONAL_COMPOSER_PACKAGE_PREREQUISITES: ${{ inputs.composer_package_prerequisites }}
         # Patches need to be publically accessible, presently (so no private PRs,
         # at present).
