@@ -6,17 +6,19 @@ Github action to launch PHPUnit tests configured for a module.
 -  **composer_package:** Composer project reference. (optional)(Default: The repository fullname. ex. 'discoverygarden/phpunit-action')
 -  **drupal_extension:** The module name for enabling within drupal. (optional)(Default: Repository name. ex. 'phpunit-action')
 -  **composer_patches:** Additional composer patches that might be necessary to run the workflow. (optional)
-  - Ex. ```yaml
-composer_patches: |-
-{
-  "drupal/core": {
-    "Postgres Driver":"https://www.drupal.org/files/issues/2022-01-11/2920527-26.patch"
-  }
-}```
+   - ```yaml
+        composer_patches: |-
+        {
+          "drupal/core": {
+            "Postgres Driver":"https://www.drupal.org/files/issues/2022-01-11/2920527-26.patch"
+          }
+        }
+     ```
 -  **composer_package_prerequisites:** require-dev modules required for the module that might not otherwise get installed. (optional)
-  - Ex. ```yaml
-composer_package_prerequisites: >-
-  "discoverygarden/relator_creator_processor:^1"```
+   - ```yaml
+        composer_package_prerequisites: >-
+          "discoverygarden/relator_creator_processor:^1"
+     ```
 -  **drupal_root:** The root drupal directory. (optional)(Default: /opt/drupal)
 -  **drupal_web_root:** The drupal web root directory. (Default: /opt/drupal/web)
 -  **postgres_db:** The postgres database name. (Default: drupal)
