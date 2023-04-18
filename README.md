@@ -6,7 +6,7 @@ Github action to launch PHPUnit tests configured for a module.
 -  **composer_package:** Composer project reference. (optional)(Default: The repository fullname. ex. 'discoverygarden/phpunit-action')
 -  **drupal_extension:** The module name for enabling within drupal. (optional)(Default: Repository name. ex. 'phpunit-action')
 -  **composer_patches:** Additional composer patches that might be necessary to run the workflow. (optional)
--- Ex. ```yaml
+  - Ex. ```yaml
 composer_patches: |-
 {
   "drupal/core": {
@@ -14,7 +14,7 @@ composer_patches: |-
   }
 }```
 -  **composer_package_prerequisites:** require-dev modules required for the module that might not otherwise get installed. (optional)
--- Ex. ```yaml
+  - Ex. ```yaml
 composer_package_prerequisites: >-
   "discoverygarden/relator_creator_processor:^1"```
 -  **drupal_root:** The root drupal directory. (optional)(Default: /opt/drupal)
