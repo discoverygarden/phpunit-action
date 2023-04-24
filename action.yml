@@ -56,7 +56,7 @@ runs:
         apt install -y jq
       shell: bash
     - name: Checkout Repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Misc setup
       working-directory: ${{ inputs.drupal_root }}
       run: |
