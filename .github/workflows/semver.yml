@@ -1,0 +1,17 @@
+name: Auto Semver
+on:
+  pull_request_target:
+    types: closed
+    branches:
+      - main
+jobs:
+  update:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      - name: Checkout Auto Semver Action Repo
+        uses: discoverygarden/auto-semver@1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
