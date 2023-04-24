@@ -89,7 +89,23 @@ jobs:
         with:
           composer-auth: ${{ secrets.PRIVATE_PACKAGIST_AUTH_ACCESS }}
 ```
-
 This action will run the module defined tests against the repository when there is a pull request against the defined branches (Default: `main` branch).
 
 This example is running this action in a matrix strategy of various drupal-project and php version configurations for additional operational security.
+
+Additionally, if calling this action within a company owned module, the action call can be simplified even further to the following:
+```
+---
+name: PHPUnit Tests
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  PHPUnit:
+    uses: discoverygarden/phpunit-action/.github/workflows/phpunit.yml@<current version constraint>
+    secrets: inherit
+```
+Defining it in this way will run the version of the workflow defined within this repository at `.github/workflows/phpunit.yml`.
