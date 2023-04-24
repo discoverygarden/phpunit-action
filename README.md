@@ -94,7 +94,7 @@ This action will run the module defined tests against the repository when there 
 This example is running this action in a matrix strategy of various drupal-project and php version configurations for additional operational security.
 
 Additionally, if calling this action within a company owned module, the action call can be simplified even further to the following:
-```
+```yaml
 ---
 name: PHPUnit Tests
 on:
