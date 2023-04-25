@@ -2,7 +2,7 @@ name: PHPUnit Tests
 on:
   workflow_call:
     inputs:
-      composer.prereqs:
+      composer_prereqs:
         required: false
         type: string
       composer_patches:
