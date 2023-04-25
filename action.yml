@@ -119,7 +119,8 @@ runs:
         # "require-dev" doesn't quite do the trick, as it's only usable at the
         # root-project level.
         COMPOSER_PACKAGE_PREREQUISITES: >-
-          "drupal/test_support:^1"
+          "drupal/test_support:^1" \
+          "discoverygarden/islandora_test_support:^1"
         ADDITIONAL_COMPOSER_PACKAGE_PREREQUISITES: ${{ inputs.composer_package_prerequisites }}
         # Patches need to be publically accessible, presently (so no private PRs,
         # at present).
