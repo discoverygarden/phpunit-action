@@ -5,3 +5,7 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+    ignore:
+      - dependency-name: "phpunit-action"
+      - dependency-name: "create-issue"
+      - dependency-name: "auto-semver"
