@@ -52,3 +52,5 @@ jobs:
           composer_package_prerequisites: ${{ inputs.composer_prereqs }}
           composer_patches: ${{ inputs.composer_patches }}
           composer-auth: ${{ secrets.PRIVATE_PACKAGIST_AUTH_ACCESS }}
+          drupal-version: ${{ matrix.drupal-version }}
+          experimental: ${{ matrix.experimental }}

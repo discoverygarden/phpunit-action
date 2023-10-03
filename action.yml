@@ -42,6 +42,12 @@ inputs:
   apache_user_group:
     description: 'The apache user group. (Default: www-data)'
     default: www-data
+  drupal-version:
+    description: 'The version of Drupal under which to run, if we need to know it.'
+    default: "${{ matrix.drupal-version }}"
+  experimental:
+    description: 'If the execution should be permissive of errors.'
+    default: "${{ matrix.experimental }}"
 
 runs:
   using: "composite"
@@ -111,7 +117,7 @@ runs:
         # > Please use 'composer require --dev phpspec/prophecy-phpunit:^2' to
         # > ensure that it is present.
         # ... so let's add it as well...
-        composer require --dev --update-with-all-dependencies "drupal/core-dev:^${{ matrix.drupal-version }}" phpspec/prophecy-phpunit:^2
+        composer require --dev --update-with-all-dependencies "drupal/core-dev:^${{ inputs.drupal-version }}" phpspec/prophecy-phpunit:^2
         chown -R $APACHE_USER:$APACHE_GROUP web/sites web/modules web/themes
         echo "::endgroup::"
       env:
@@ -141,7 +147,7 @@ runs:
         APACHE_USER: ${{ inputs.apache_user }}
         DRUPAL_WEB_ROOT: ${{ inputs.drupal_web_root }}
       working-directory: ${{ inputs.drupal_root }}
-      continue-on-error: ${{ matrix.experimental }}
+      continue-on-error: ${{ inputs.experimental }}
       run: |
         echo "::group::Run PHPUnit tests (base)"
         su "$APACHE_USER" -s /bin/bash <<-EOS
