@@ -14,18 +14,19 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        drupal-version: ['9.4']
-        php-version: ['7.4', '8.0']
+        drupal-version:
+          - '9'
+        php-version:
+          - '7.4' # XXX: To be removed when we are no longer actually running it anywhere.
+          - '8.1'
+          - '8.2'
         experimental: [false]
         include:
-          - drupal-version: '9'
-            php-version: '7.4'
-            experimental: true
-          - drupal-version: '9'
+          - drupal-version: '10'
             php-version: '8.1'
             experimental: true
-          - drupal-version: '9.4'
-            php-version: '8.1'
+          - drupal-version: '10'
+            php-version: '8.2'
             experimental: true
     continue-on-error: ${{ matrix.experimental }}
     container:
