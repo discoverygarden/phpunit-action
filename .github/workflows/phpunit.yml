@@ -1,3 +1,4 @@
+---
 name: PHPUnit Tests
 on:
   workflow_call:
@@ -8,7 +9,7 @@ on:
       composer_patches:
         required: false
         type: string
-      
+
 jobs:
   PHPUnit:
     runs-on: ubuntu-latest
@@ -47,8 +48,8 @@ jobs:
           --health-retries 5
     steps:
       - name: Run PHPUnit Action
-        # XXX: Point at the action in this repo.
-        uses: discoverygarden/phpunit-action@${{ github.workflow_sha }}
+        #uses: discoverygarden/phpunit-action@v1
+        uses: discoverygarden/phpunit-action@fix/auth
         with:
           composer_package_prerequisites: ${{ inputs.composer_prereqs }}
           composer_patches: ${{ inputs.composer_patches }}
