@@ -47,7 +47,8 @@ jobs:
           --health-retries 5
     steps:
       - name: Run PHPUnit Action
-        uses: discoverygarden/phpunit-action@v1
+        # XXX: Point at the action in this repo.
+        uses: .
         with:
           composer_package_prerequisites: ${{ inputs.composer_prereqs }}
           composer_patches: ${{ inputs.composer_patches }}
