@@ -68,10 +68,6 @@ runs:
         composer require "drush/drush:^10"
         # Install the site.
         drush --uri=http://localhost --yes -v site:install minimal --db-url="pgsql://${{ inputs.postgres_user }}:${{ inputs.postgres_password }}@postgres/${{ inputs.postgres_db}}"
-        # Configure access and install our module.
-        if [ -n "${{ inputs.composer-auth }}" ] ; then
-          echo '${{ inputs.composer-auth }}' > auth.json
-        fi
         # Setup our repos.
         # XXX: We don't want the default Drupal thing first (it'll be readded
         # later).
@@ -83,8 +79,12 @@ runs:
           '{"type": "git", "url": "https://github.com/Islandora/islandora.git"}'
         composer config --json -- repositories.drupal \
           '{"type": "composer", "url": "https://packages.drupal.org/8", "canonical": false}'
-        composer config --json -- repositories.private_packagist \
-          '{"type": "composer", "url": "https://repo.packagist.com/discoverygarden/", "canonical": false}'
+        # Configure access, and add our private packagist, if relevant.
+        if [ -n "${{ inputs.composer-auth }}" ] ; then
+          echo '${{ inputs.composer-auth }}' > auth.json
+          composer config --json -- repositories.private_packagist \
+            '{"type": "composer", "url": "https://repo.packagist.com/discoverygarden/", "canonical": false}'
+        fi
         composer config --json -- repositories.actions \
           "{\"type\": \"path\", \"url\": \"$GITHUB_WORKSPACE\"}"
         composer config -- repo.packagist false
