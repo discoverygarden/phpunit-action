@@ -6,7 +6,7 @@ description: Runs configured PHPUnit Tests implemented in called repository.
 inputs:
   composer-auth:
     description: 'Composer auth token necessary for accessing our composer project.'
-    required: true
+    required: false
   composer_package:
     description: "Composer project reference. (ex. discoverygarden/dgi_group) it's only necessary to provide this if the composer package differs from the repository name."
     required: false
@@ -75,7 +75,9 @@ runs:
         # Install the site.
         drush --uri=http://localhost --yes -v site:install minimal --db-url="pgsql://${{ inputs.postgres_user }}:${{ inputs.postgres_password }}@postgres/${{ inputs.postgres_db}}"
         # Configure access and install our module.
-        echo '${{ inputs.composer-auth }}' > auth.json
+        if [ -n "${{ inputs.composer-auth }}" ] ; then
+          echo '${{ inputs.composer-auth }}' > auth.json
+        fi
         # Setup our repos.
         # XXX: We don't want the default Drupal thing first (it'll be readded
         # later).
