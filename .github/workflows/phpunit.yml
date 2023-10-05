@@ -48,7 +48,7 @@ jobs:
     steps:
       - name: Run PHPUnit Action
         # XXX: Point at the action in this repo.
-        uses: ./
+        uses: discoverygarden/phpunit-action@${{ github.workflow_sha }}
         with:
           composer_package_prerequisites: ${{ inputs.composer_prereqs }}
           composer_patches: ${{ inputs.composer_patches }}
