@@ -87,7 +87,7 @@ runs:
         fi
         composer config --json -- repositories.actions \
           "{\"type\": \"path\", \"url\": \"$GITHUB_WORKSPACE\"}"
-        if [ -z "${{ inputs.composer-auth }}" ] ; then
+        if [ -n "${{ inputs.composer-auth }}" ] ; then
           composer config -- repo.packagist false
         fi
 
