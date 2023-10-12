@@ -124,7 +124,7 @@ runs:
         # root-project level.
         COMPOSER_PACKAGE_PREREQUISITES: >-
           "drupal/test_support:^1" \
-          "discoverygarden/islandora_test_support:dev-fix/d10-88 as 1.x-dev"
+          "discoverygarden/islandora_test_support:^1
         ADDITIONAL_COMPOSER_PACKAGE_PREREQUISITES: ${{ inputs.composer_package_prerequisites }}
         # Patches need to be publically accessible, presently (so no private PRs,
         # at present).
