@@ -165,7 +165,7 @@ runs:
         APACHE_USER: ${{ inputs.apache_user }}
         APACHE_GROUP: ${{ inputs.apache_group }}
       shell: bash
-      continue-on-error: ${{ inputs.experimental }}
+      continue-on-error: ${{ fromJSON(inputs.experimental) }}
     - name: Run PHPUnit tests (base)
       env:
         SIMPLETEST_BASE_URL: http://127.0.0.1
@@ -173,7 +173,7 @@ runs:
         APACHE_USER: ${{ inputs.apache_user }}
         DRUPAL_WEB_ROOT: ${{ inputs.drupal_web_root }}
       working-directory: ${{ inputs.drupal_root }}
-      continue-on-error: ${{ inputs.experimental }}
+      continue-on-error: ${{ fromJSON(inputs.experimental) }}
       run: |
         echo "::group::Run PHPUnit tests (base)"
         su "$APACHE_USER" -s /bin/bash <<-EOS
