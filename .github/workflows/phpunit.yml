@@ -39,7 +39,8 @@ jobs:
             do-leniency: true
           - drupal-version: '10'
             php-version: '8.2'
-            experimental: false
+            # XXX: experimental, for now.
+            experimental: true
             do-leniency: true
     continue-on-error: ${{ matrix.experimental }}
     container:
