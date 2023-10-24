@@ -78,6 +78,12 @@ runs:
         apache2ctl start
         # Install Drush.
         composer require --update-with-all-dependencies ${{ inputs.drush-spec }}
+        # XXX: Trying to run PHPUnit complains w/o prophecy-phpunit:
+        # > Drupal requires Prophecy PhpUnit when using PHPUnit 9 or greater.
+        # > Please use 'composer require --dev phpspec/prophecy-phpunit:^2' to
+        # > ensure that it is present.
+        # ... so let's add it as well...
+        composer require --dev --update-with-all-dependencies "drupal/core-dev:^${{ inputs.drupal-version }}" phpspec/prophecy-phpunit:^2
         # Install the site.
         drush --uri=http://localhost --yes -v site:install minimal --db-url="pgsql://${{ inputs.postgres_user }}:${{ inputs.postgres_password }}@postgres/${{ inputs.postgres_db}}"
         # Configure access and install our module.
@@ -131,12 +137,6 @@ runs:
 
         # Install the module.
         drush --uri=http://localhost --yes -v en ${{ inputs.drupal_extension }}
-        # XXX: Trying to run PHPUnit complains w/o prophecy-phpunit:
-        # > Drupal requires Prophecy PhpUnit when using PHPUnit 9 or greater.
-        # > Please use 'composer require --dev phpspec/prophecy-phpunit:^2' to
-        # > ensure that it is present.
-        # ... so let's add it as well...
-        composer require --dev --update-with-all-dependencies "drupal/core-dev:^${{ inputs.drupal-version }}" phpspec/prophecy-phpunit:^2
         chown -R $APACHE_USER:$APACHE_GROUP web/sites web/modules web/themes
         echo "::endgroup::"
       env:
