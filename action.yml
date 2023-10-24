@@ -126,7 +126,7 @@ runs:
         if [ '${{ inputs.do-leniency }}' = 'true' ] ; then
           echo "Doing the lenient thing."
           composer config --no-plugins allow-plugins.mglaman/composer-drupal-lenient true
-          composer config --merge --json extra.drupal-lenient.allowed-list ${{ inputs.lenient-packages }}
+          composer config --merge --json extra.drupal-lenient.allowed-list "${{ inputs.lenient-packages }}"
           composer require "mglaman/composer-drupal-lenient"
         else
           echo "Not doing the lenient thing."
