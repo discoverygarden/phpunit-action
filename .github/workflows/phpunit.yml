@@ -56,7 +56,7 @@ jobs:
         run: |
           apt-get update
           apt-get install -y postgresql-client
-          psql --command='CREATE EXTENSION pg_trgm;' drupal
+          PGHOST=postgres PGUSER=drupal PGPASSWORD=drupal psql --command='CREATE EXTENSION pg_trgm;' drupal
       - name: Run PHPUnit Action
         #uses: discoverygarden/phpunit-action@v1
         uses: discoverygarden/phpunit-action@d10-support # Redirect to tag before merge.
