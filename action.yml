@@ -66,8 +66,7 @@ runs:
         # postgresql-client required for drush's site installation process
         # git required to grab repo as repo via actions/checkout
         apt update
-        apt install -y postgresql-client git
-        apt install -y jq
+        apt install -y postgresql-client git unzip jq
       shell: bash
     - name: Checkout Repo
       uses: actions/checkout@v3
@@ -126,7 +125,7 @@ runs:
         if [ '${{ inputs.do-leniency }}' = 'true' ] ; then
           echo "Doing the lenient thing."
           composer config --no-plugins allow-plugins.mglaman/composer-drupal-lenient true
-          composer config --merge --json extra.drupal-lenient.allowed-list "${{ inputs.lenient-packages }}"
+          composer config --merge --json extra.drupal-lenient.allowed-list '${{ inputs.lenient-packages }}'
           composer require "mglaman/composer-drupal-lenient"
         else
           echo "Not doing the lenient thing."
