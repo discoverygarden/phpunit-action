@@ -54,6 +54,8 @@ inputs:
     default: 'drush/drush'
   do-leniency:
     default: true
+  lenient-packages:
+    default: '[]'
 
 runs:
   using: "composite"
@@ -124,7 +126,7 @@ runs:
         if [ '${{ inputs.do-leniency }}' = 'true' ] ; then
           echo "Doing the lenient thing."
           composer config --no-plugins allow-plugins.mglaman/composer-drupal-lenient true
-          composer config --merge --json extra.drupal-lenient.allowed-list '["drupal/migrate_directory"]'
+          composer config --merge --json extra.drupal-lenient.allowed-list ${{ inputs.lenient-packages }}
           composer require "mglaman/composer-drupal-lenient"
         else
           echo "Not doing the lenient thing."
@@ -169,8 +171,7 @@ runs:
               "Referencable unpublished nodes": "https://www.drupal.org/files/issues/2022-06-17/2845144-67.patch"
             },
             "drupal/migrate_directory": {
-              "Custom iterator for memory optimization": "https://www.drupal.org/files/issues/2023-03-03/3344946-iterator.patch",
-              "D10 support": "https://www.drupal.org/files/issues/2022-06-16/migrate_directory.2.0.0.rector.patch"
+              "Custom iterator for memory optimization": "https://www.drupal.org/files/issues/2023-03-03/3344946-iterator.patch"
             }
           }
         ADDITIONAL_COMPOSER_PATCHES: ${{ inputs.composer_patches }}

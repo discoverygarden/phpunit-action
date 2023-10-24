@@ -9,6 +9,9 @@ on:
       composer_patches:
         required: false
         type: string
+      lenient-packages:
+        required: false
+        type: string
 
 jobs:
   PHPUnit:
@@ -72,3 +75,4 @@ jobs:
           drupal-version: ${{ matrix.drupal-version }}
           experimental: ${{ matrix.experimental }}
           do-leniency: ${{ matrix.do-leniency }}
+          leniant-packages: ${{ inputs.lenient-pacakges }}
