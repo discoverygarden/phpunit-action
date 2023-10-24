@@ -54,6 +54,7 @@ jobs:
     steps:
       - name: Enable PG_TGRM
         run: |
+          apt-get install postgresql-client
           psql --command='CREATE EXTENSION pg_trgm;' drupal
       - name: Run PHPUnit Action
         #uses: discoverygarden/phpunit-action@v1
