@@ -74,3 +74,4 @@ jobs:
           composer-auth: ${{ secrets.PRIVATE_PACKAGIST_AUTH_ACCESS }}
           drupal-version: ${{ matrix.drupal-version }}
           experimental: ${{ matrix.experimental }}
+          do-leniency: ${{ matrix.do-leniency }}
