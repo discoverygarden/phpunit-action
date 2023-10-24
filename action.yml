@@ -147,7 +147,7 @@ runs:
             "drupal/migrate_directory": {
               "Custom iterator for memory optimization": "https://www.drupal.org/files/issues/2023-03-03/3344946-iterator.patch",
               "D10 support": "https://www.drupal.org/files/issues/2022-06-16/migrate_directory.2.0.0.rector.patch"
-            },
+            }
           }
         ADDITIONAL_COMPOSER_PATCHES: ${{ inputs.composer_patches }}
         APACHE_USER: ${{ inputs.apache_user }}
