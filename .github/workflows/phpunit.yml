@@ -18,10 +18,14 @@ jobs:
         drupal-version:
           - '9'
         php-version:
-          - '7.4' # XXX: To be removed when we are no longer actually running it anywhere.
           - '8.1'
         experimental: [false]
+        do-leniency: 'true'
         include:
+          # XXX: 7.4 To be removed when we are no longer actually running it anywhere.
+          - drupal-version: '9'
+            php-version: '7.4'
+            do-leniency: false
           # XXX: D9 doesn't seem to be installable with PHP 8.2, due to
           # incompatible dependencies.
           - drupal-version: '9'
@@ -32,7 +36,6 @@ jobs:
             experimental: true
           - drupal-version: '10'
             php-version: '8.2'
-            experimental: false
     continue-on-error: ${{ matrix.experimental }}
     container:
       image: drupal:${{ matrix.drupal-version }}-php${{ matrix.php-version }}
