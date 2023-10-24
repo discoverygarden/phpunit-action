@@ -130,6 +130,7 @@ runs:
         # "require-dev" doesn't quite do the trick, as it's only usable at the
         # root-project level.
         COMPOSER_PACKAGE_PREREQUISITES: >-
+          "discoverygarden/dgi_migrate:dev-fix/d10-27 as 3.x-dev" \
           "drupal/test_support:^1" \
           "discoverygarden/islandora_test_support:^1"
         ADDITIONAL_COMPOSER_PACKAGE_PREREQUISITES: ${{ inputs.composer_package_prerequisites }}
