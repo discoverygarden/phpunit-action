@@ -75,4 +75,4 @@ jobs:
           drupal-version: ${{ matrix.drupal-version }}
           experimental: ${{ matrix.experimental }}
           do-leniency: ${{ matrix.do-leniency }}
-          lenient-packages: ${{ inputs.lenient-pacakges }}
+          lenient-packages: ${{ inputs.lenient-packages }}
