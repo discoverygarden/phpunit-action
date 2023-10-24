@@ -20,7 +20,7 @@ jobs:
         php-version:
           - '8.1'
         experimental: [false]
-        do-leniency: 'true'
+        do-leniency: ['true']
         include:
           # XXX: 7.4 To be removed when we are no longer actually running it anywhere.
           - drupal-version: '9'
