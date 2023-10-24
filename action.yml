@@ -46,13 +46,14 @@ inputs:
     description: 'The version of Drupal under which to run, if we need to know it.'
     default: "${{ matrix.drupal-version }}"
   experimental:
+    type: boolean
     description: 'If the execution should be permissive of errors.'
     default: "${{ matrix.experimental }}"
   drush-spec:
     description: 'Composer spec for acquiring drush.'
     default: 'drush/drush'
   do-leniency:
-    default: 'true'
+    default: true
 
 runs:
   using: "composite"

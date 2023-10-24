@@ -27,17 +27,17 @@ jobs:
           - drupal-version: '9'
             php-version: '7.4'
             experimental: true
-            do-leniency: false
+            do-leniency: 'false'
           # XXX: D9 doesn't seem to be installable with PHP 8.2, due to
           # incompatible dependencies.
           - drupal-version: '9'
             php-version: '8.2'
             experimental: true
-            do-leniency: true
+            do-leniency: 'true'
           - drupal-version: '10'
             php-version: '8.2'
             experimental: false
-            do-leniency: true
+            do-leniency: 'true'
     continue-on-error: ${{ matrix.experimental }}
     container:
       image: drupal:${{ matrix.drupal-version }}-php${{ matrix.php-version }}
