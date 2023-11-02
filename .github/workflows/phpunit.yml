@@ -9,6 +9,9 @@ on:
       composer_patches:
         required: false
         type: string
+      lenient-packages:
+        required: false
+        type: string
 
 jobs:
   PHPUnit:
@@ -17,18 +20,28 @@ jobs:
       matrix:
         drupal-version:
           - '9'
+          - '10'
         php-version:
-          - '7.4' # XXX: To be removed when we are no longer actually running it anywhere.
           - '8.1'
-          - '8.2'
         experimental: [false]
+        do-leniency: [true]
         include:
-          - drupal-version: '10'
-            php-version: '8.1'
+          # XXX: 7.4 To be removed when we are no longer actually running it anywhere.
+          - drupal-version: '9'
+            php-version: '7.4'
             experimental: true
-          - drupal-version: '10'
+            do-leniency: false
+          # XXX: D9 doesn't seem to be installable with PHP 8.2, due to
+          # incompatible dependencies.
+          - drupal-version: '9'
             php-version: '8.2'
             experimental: true
+            do-leniency: true
+          - drupal-version: '10'
+            php-version: '8.2'
+            # XXX: experimental, for now.
+            experimental: true
+            do-leniency: true
     continue-on-error: ${{ matrix.experimental }}
     container:
       image: drupal:${{ matrix.drupal-version }}-php${{ matrix.php-version }}
@@ -48,6 +61,11 @@ jobs:
           --health-timeout 5s
           --health-retries 5
     steps:
+      - name: Enable PG_TRGM
+        run: |
+          apt-get update
+          apt-get install -y postgresql-client
+          PGHOST=postgres PGUSER=drupal PGPASSWORD=drupal psql --command='CREATE EXTENSION pg_trgm;' drupal
       - name: Run PHPUnit Action
         #uses: discoverygarden/phpunit-action@v1
         uses: discoverygarden/phpunit-action@d10-support # Redirect to tag before merge.
@@ -57,3 +75,5 @@ jobs:
           composer-auth: ${{ secrets.PRIVATE_PACKAGIST_AUTH_ACCESS }}
           drupal-version: ${{ matrix.drupal-version }}
           experimental: ${{ matrix.experimental }}
+          do-leniency: ${{ matrix.do-leniency }}
+          lenient-packages: ${{ inputs.lenient-packages }}
