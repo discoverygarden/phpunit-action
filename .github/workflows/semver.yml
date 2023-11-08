@@ -11,3 +11,7 @@ jobs:
     steps:
       - name: Checkout Auto Semver Action Repo
         uses: discoverygarden/auto-semver@v1
+      - name: Update Major Tag
+        uses: discoverygarden/action-major-tag@v1
+        with:
+          prefix: 'v'
