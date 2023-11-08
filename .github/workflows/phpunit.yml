@@ -12,6 +12,7 @@ on:
       lenient-packages:
         required: false
         type: string
+        default: '[]'
 
 jobs:
   PHPUnit:
