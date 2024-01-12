@@ -21,17 +21,33 @@ jobs:
       matrix:
         drupal-version:
           - '10.1'
-          - '10.2'
         php-version:
           - '8.2'
         experimental: [false]
         do-leniency: [true]
+        patches: ["{}"]
         include:
+          - drupal-version: '10.2'
+            php-version: '8.2'
+            experimental: false
+            do-leniency: true
+            patches: |-
+              {
+                "drupal/core": {
+                  "Referencable unpublished nodes": "https://www.drupal.org/files/issues/2024-01-07/2845144-78.patch"
+                }
+              }
           - drupal-version: '10.2'
             php-version: '8.3'
             # XXX: experimental, for now.
             experimental: true
             do-leniency: true
+            patches: |-
+              {
+                "drupal/core": {
+                  "Referencable unpublished nodes": "https://www.drupal.org/files/issues/2024-01-07/2845144-78.patch"
+                }
+              }
     continue-on-error: ${{ matrix.experimental }}
     container:
       image: drupal:${{ matrix.drupal-version }}-php${{ matrix.php-version }}

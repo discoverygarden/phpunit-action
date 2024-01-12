@@ -108,15 +108,17 @@ runs:
 
         # Dump out the configured repositories.
         composer config repositories
-        if [ -n '${{ env.COMPOSER_PATCHES }}' ] ; then
+
+        PATCHES="$(
+          jq -n 'reduce inputs as $item ({}; . * $item)' \
+           <(echo '${{ env.COMPOSER_PATCHES || "{}" }}') \
+           <(echo '${{ matrix.patches || "{}" }}') \
+           <(echo '${{ env.ADDITIONAL_COMPOSER_PATCHES || "{}" }}')
+        )"
+
+        if [ "$(jq 'length > 1' <(echo "$PATCHES"))" = 'true' ] ; then
           composer config -- allow-plugins.cweagans/composer-patches true
-          if [ -n '${{ env.ADDITIONAL_COMPOSER_PATCHES }}' ] ; then
-            echo '${{ env.COMPOSER_PATCHES }}' > patches.json
-            echo '${{ env.ADDITIONAL_COMPOSER_PATCHES }}' > additional_patches.json
-            composer config --json --merge -- extra.patches "$(jq -s '.[0] * .[1]' patches.json additional_patches.json)"
-          else
-            composer config --json --merge -- extra.patches '${{ env.COMPOSER_PATCHES }}'
-          fi
+          composer config --json --merge -- extra.patches "$PATCHES"
           composer require "cweagans/composer-patches:^1.7"
         fi
         composer config minimum-stability dev
