@@ -84,3 +84,4 @@ jobs:
           experimental: ${{ matrix.experimental }}
           do-leniency: ${{ matrix.do-leniency }}
           lenient-packages: ${{ inputs.lenient-packages }}
+          matrix-patches: ${{ matrix.patches }}
