@@ -29,7 +29,7 @@ jobs:
         include:
           - drupal-version: '10.2'
             php-version: '8.2'
-            experimental: false
+            experimental: true
             do-leniency: true
             patches: |-
               {
