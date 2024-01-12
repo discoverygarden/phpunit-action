@@ -73,7 +73,8 @@ jobs:
           apt-get install -y postgresql-client
           PGHOST=postgres PGUSER=drupal PGPASSWORD=drupal psql --command='CREATE EXTENSION pg_trgm;' drupal
       - name: Run PHPUnit Action
-        uses: discoverygarden/phpunit-action@v1
+        #uses: discoverygarden/phpunit-action@v1
+        uses: discoverygarden/phpunit-action@adjust-matrix
         with:
           composer_package_prerequisites: ${{ inputs.composer_prereqs }}
           composer_patches: ${{ inputs.composer_patches }}
