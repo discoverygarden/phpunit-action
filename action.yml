@@ -111,9 +111,9 @@ runs:
 
         PATCHES="$(
           jq -n 'reduce inputs as $item ({}; . * $item)' \
-           <(echo '${{ env.COMPOSER_PATCHES || "{}" }}') \
-           <(echo '${{ matrix.patches || "{}" }}') \
-           <(echo '${{ env.ADDITIONAL_COMPOSER_PATCHES || "{}" }}')
+           <(echo '${{ env.COMPOSER_PATCHES || {} }}') \
+           <(echo '${{ matrix.patches || {} }}') \
+           <(echo '${{ env.ADDITIONAL_COMPOSER_PATCHES || {} }}')
         )"
 
         if [ "$(jq 'length > 1' <(echo "$PATCHES"))" = 'true' ] ; then
