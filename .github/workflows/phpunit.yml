@@ -25,13 +25,13 @@ jobs:
         php-version:
           - '8.2'
         experimental: [false]
-        do-leniency: [false]
+        do-leniency: [true]
         include:
           - drupal-version: '10.2'
             php-version: '8.3'
             # XXX: experimental, for now.
             experimental: true
-            do-leniency: false
+            do-leniency: true
     continue-on-error: ${{ matrix.experimental }}
     container:
       image: drupal:${{ matrix.drupal-version }}-php${{ matrix.php-version }}
