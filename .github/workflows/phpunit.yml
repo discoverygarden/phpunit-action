@@ -48,7 +48,7 @@ jobs:
                   "Referencable unpublished nodes": "https://www.drupal.org/files/issues/2024-01-07/2845144-78.patch"
                 }
               }
-    run-name: Drupal ${{ matrix.drupal-version }} | PHP ${{ matrix.php-version }}
+    name: Drupal ${{ matrix.drupal-version }} | PHP ${{ matrix.php-version }}
     continue-on-error: ${{ matrix.experimental }}
     container:
       image: drupal:${{ matrix.drupal-version }}-php${{ matrix.php-version }}
