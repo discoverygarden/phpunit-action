@@ -72,7 +72,7 @@ runs:
         apt install -y postgresql-client git unzip jq
       shell: bash
     - name: Checkout Repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Misc setup
       working-directory: ${{ inputs.drupal_root }}
       run: |
