@@ -76,7 +76,7 @@ runs:
     - name: Misc setup
       working-directory: ${{ inputs.drupal_root }}
       run: |
-        set -eux
+        set -eu
         # XXX: When running inside a container, it skips the entry point,
         # so... let's kick off the Apache process.
         apache2ctl start
