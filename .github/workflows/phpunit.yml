@@ -20,23 +20,19 @@ jobs:
     strategy:
       matrix:
         drupal-version:
-          - '10.1'
+          - '10.2'
         php-version:
           - '8.2'
         experimental: [false]
         do-leniency: [true]
-        patches: ["{}"]
-        include:
-          - drupal-version: '10.2'
-            php-version: '8.2'
-            experimental: true
-            do-leniency: true
-            patches: |-
+        patches:
+          - |-
               {
                 "drupal/core": {
                   "Referencable unpublished nodes": "https://www.drupal.org/files/issues/2024-01-07/2845144-78.patch"
                 }
               }
+        include:
           - drupal-version: '10.2'
             php-version: '8.3'
             # XXX: experimental, for now.
