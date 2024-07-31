@@ -66,29 +66,30 @@ jobs:
                   "Referencable unpublished nodes": "https://www.drupal.org/files/issues/2024-01-07/2845144-78.patch"
                 }
               }
-          - drupal-version: '10.4'
-            php-version: '8.2'
-            # XXX: experimental, for now.
-            experimental: true
-            do-leniency: true
-            patches: |-
-              {
-                "drupal/core": {
-                  "Referencable unpublished nodes": "https://www.drupal.org/files/issues/2024-01-07/2845144-78.patch"
-                }
-              }
-          - drupal-version: '10.4'
-            php-version: '8.3'
-            # XXX: experimental, for now.
-            experimental: true
-            do-leniency: true
-            patches: |-
-              {
-                "drupal/core": {
-                  "Referencable unpublished nodes": "https://www.drupal.org/files/issues/2024-01-07/2845144-78.patch"
-                }
-              }
-          - drupal-version: '11'
+# XXX: 10.4 images do not exist at this point in time.
+#          - drupal-version: '10.4'
+#            php-version: '8.2'
+#            # XXX: experimental, for now.
+#            experimental: true
+#            do-leniency: true
+#            patches: |-
+#              {
+#                "drupal/core": {
+#                  "Referencable unpublished nodes": "https://www.drupal.org/files/issues/2024-01-07/2845144-78.patch"
+#                }
+#              }
+#          - drupal-version: '10.4'
+#            php-version: '8.3'
+#            # XXX: experimental, for now.
+#            experimental: true
+#            do-leniency: true
+#            patches: |-
+#              {
+#                "drupal/core": {
+#                  "Referencable unpublished nodes": "https://www.drupal.org/files/issues/2024-01-07/2845144-78.patch"
+#                }
+#              }
+          - drupal-version: '11.0-rc'
             php-version: '8.3'
             # XXX: experimental, for now.
             experimental: true
