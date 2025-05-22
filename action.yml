@@ -93,8 +93,6 @@ runs:
         # We need to specify things in the _opposite_ order than what we want.
         # XXX: Some repos are in an odd state, between different repos... so
         # let's throw 'em in.
-        composer config --json -- repositories.islandora \
-          '{"type": "git", "url": "https://github.com/Islandora/islandora.git"}'
         composer config --json -- repositories.drupal \
           '{"type": "composer", "url": "https://packages.drupal.org/8", "canonical": false}'
         # Configure access, and add our private packagist, if relevant.
