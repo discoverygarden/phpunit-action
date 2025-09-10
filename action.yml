@@ -103,6 +103,7 @@ runs:
           composer config --json -- repositories.private_packagist \
             '{"type": "composer", "url": "https://repo.packagist.com/discoverygarden/", "canonical": false}'
         fi
+        git config --global --add safe.directory $GITHUB_WORKSPACE
         composer config --json -- repositories.actions \
           "{\"type\": \"path\", \"url\": \"$GITHUB_WORKSPACE\"}"
         if [ -n "${{ inputs.composer-auth }}" ] ; then
