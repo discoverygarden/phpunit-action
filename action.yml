@@ -108,6 +108,9 @@ runs:
           "{\"type\": \"path\", \"url\": \"$GITHUB_WORKSPACE\"}"
         if [ -n "${{ inputs.composer-auth }}" ] ; then
           composer config -- repo.packagist false
+        else
+          composer config --json -- repositories.packagist \
+            '{"type": "composer", "url": "https://repo.packagist.org", "canonical": false}'
         fi
 
         # Dump out the configured repositories.
