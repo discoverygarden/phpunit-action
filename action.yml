@@ -154,7 +154,7 @@ runs:
         composer require --update-with-all-dependencies ${{ inputs.drush-spec }}
 
         # Install the site.
-        drush --uri=http://localhost --yes -v site:install minimal --db-url="pgsql://${{ inputs.postgres_user }}:${{ inputs.postgres_password }}@postgres/${{ inputs.postgres_db}}"
+        drush --uri=http://localhost --yes -v site:install minimal --db-url="pgsql://${{ inputs.postgres_user }}:${{ inputs.postgres_password }}@postgres/${{ inputs.postgres_db}}" install_configure_form.enable_update_status_emails=NULL
 
         # Install the module.
         drush --uri=http://localhost --yes -v en ${{ inputs.drupal_extension }}
