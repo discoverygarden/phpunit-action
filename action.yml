@@ -137,8 +137,14 @@ runs:
           echo "Not doing the lenient thing."
         fi
 
+        if [[ "${{ github.ref_type }}" == "branch" ]] ; then
+          VERSION_SPEC="dev-${{ github.ref }}"
+        else
+          VERSION_SPEC="${{ github.ref }}"
+        fi
+
         composer require --update-with-all-dependencies ${{ env.COMPOSER_PACKAGE_PREREQUISITES }} ${{ env.ADDITIONAL_COMPOSER_PACKAGE_PREREQUISITES }} \
-          "${{ inputs.composer_package }}:dev-main#${{ github.sha }}"
+          "${{ inputs.composer_package }}:$VERSION_SPEC"
 
         # XXX: Trying to run PHPUnit complains w/o prophecy-phpunit:
         # > Drupal requires Prophecy PhpUnit when using PHPUnit 9 or greater.
