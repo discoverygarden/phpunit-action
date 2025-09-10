@@ -93,6 +93,12 @@ runs:
         # We need to specify things in the _opposite_ order than what we want.
         # XXX: Some repos are in an odd state, between different repos... so
         # let's throw 'em in.
+        if [ -n "${{ inputs.composer-auth }}" ] ; then
+          composer config -- repo.packagist false
+        else
+          composer config --json -- repositories.packagist \
+            '{"type": "composer", "url": "https://repo.packagist.org", "canonical": false}'
+        fi
         composer config --json -- repositories.islandora \
           '{"type": "git", "url": "https://github.com/Islandora/islandora.git"}'
         composer config --json -- repositories.drupal \
@@ -106,12 +112,6 @@ runs:
         git config --global --add safe.directory $GITHUB_WORKSPACE
         composer config --json -- repositories.actions \
           "{\"type\": \"path\", \"url\": \"$GITHUB_WORKSPACE\"}"
-        if [ -n "${{ inputs.composer-auth }}" ] ; then
-          composer config -- repo.packagist false
-        else
-          composer config --json -- repositories.packagist \
-            '{"type": "composer", "url": "https://repo.packagist.org", "canonical": false}'
-        fi
 
         # Dump out the configured repositories.
         composer config repositories
