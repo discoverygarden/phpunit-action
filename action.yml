@@ -93,6 +93,12 @@ runs:
         # We need to specify things in the _opposite_ order than what we want.
         # XXX: Some repos are in an odd state, between different repos... so
         # let's throw 'em in.
+        if [ -n "${{ inputs.composer-auth }}" ] ; then
+          composer config -- repo.packagist false
+        else
+          composer config --json -- repositories.packagist \
+            '{"type": "composer", "url": "https://repo.packagist.org", "canonical": false}'
+        fi
         composer config --json -- repositories.islandora \
           '{"type": "git", "url": "https://github.com/Islandora/islandora.git"}'
         composer config --json -- repositories.drupal \
@@ -103,11 +109,9 @@ runs:
           composer config --json -- repositories.private_packagist \
             '{"type": "composer", "url": "https://repo.packagist.com/discoverygarden/", "canonical": false}'
         fi
+        git config --global --add safe.directory $GITHUB_WORKSPACE
         composer config --json -- repositories.actions \
           "{\"type\": \"path\", \"url\": \"$GITHUB_WORKSPACE\"}"
-        if [ -n "${{ inputs.composer-auth }}" ] ; then
-          composer config -- repo.packagist false
-        fi
 
         # Dump out the configured repositories.
         composer config repositories
@@ -136,8 +140,10 @@ runs:
           echo "Not doing the lenient thing."
         fi
 
+        VERSION_SPEC="dev-${{ github.sha }}"
+
         composer require --update-with-all-dependencies ${{ env.COMPOSER_PACKAGE_PREREQUISITES }} ${{ env.ADDITIONAL_COMPOSER_PACKAGE_PREREQUISITES }} \
-          "${{ inputs.composer_package }}:dev-main#${{ github.sha }}"
+          "${{ inputs.composer_package }}:$VERSION_SPEC"
 
         # XXX: Trying to run PHPUnit complains w/o prophecy-phpunit:
         # > Drupal requires Prophecy PhpUnit when using PHPUnit 9 or greater.
@@ -151,7 +157,7 @@ runs:
         composer require --update-with-all-dependencies ${{ inputs.drush-spec }}
 
         # Install the site.
-        drush --uri=http://localhost --yes -v site:install minimal --db-url="pgsql://${{ inputs.postgres_user }}:${{ inputs.postgres_password }}@postgres/${{ inputs.postgres_db}}"
+        drush --uri=http://localhost --yes -v site:install minimal --db-url="pgsql://${{ inputs.postgres_user }}:${{ inputs.postgres_password }}@postgres/${{ inputs.postgres_db}}" install_configure_form.enable_update_status_emails=NULL
 
         # Install the module.
         drush --uri=http://localhost --yes -v en ${{ inputs.drupal_extension }}
