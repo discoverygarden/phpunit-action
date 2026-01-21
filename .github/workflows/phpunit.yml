@@ -20,7 +20,6 @@ jobs:
     strategy:
       matrix:
         drupal-version:
-          - '10.4'
           - '10.5'
         php-version:
           - '8.3'
@@ -28,21 +27,16 @@ jobs:
         experimental: [false]
         do-leniency: [true]
         include:
-          - drupal-version: '10.3'
+          - drupal-version: '10.5'
             php-version: '8.2'
             experimental: false
-            do-leniency: true
-# No image...
-#          - drupal-version: '10.4'
-#            php-version: '8.2'
-#            experimental: false
-#            do-leniency: true
-          - drupal-version: '11.1'
+            do-leniency: false
+          - drupal-version: '10.6'
             php-version: '8.3'
             # XXX: experimental, for now.
             experimental: true
             do-leniency: true
-          - drupal-version: '11.1'
+          - drupal-version: '10.6'
             php-version: '8.4'
             # XXX: experimental, for now.
             experimental: true
@@ -54,6 +48,11 @@ jobs:
             do-leniency: true
           - drupal-version: '11.2'
             php-version: '8.4'
+            # XXX: experimental, for now.
+            experimental: true
+            do-leniency: true
+          - drupal-version: '11.2'
+            php-version: '8.5'
             # XXX: experimental, for now.
             experimental: true
             do-leniency: true
