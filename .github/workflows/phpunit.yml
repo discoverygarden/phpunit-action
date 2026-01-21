@@ -46,6 +46,11 @@ jobs:
             # XXX: experimental, for now.
             experimental: true
             do-leniency: true
+          - drupal-version: '10.6'
+            php-version: '8.5'
+            # XXX: experimental, for now.
+            experimental: true
+            do-leniency: true
           - drupal-version: '11.2'
             php-version: '8.3'
             # XXX: experimental, for now.
@@ -53,6 +58,11 @@ jobs:
             do-leniency: true
           - drupal-version: '11.2'
             php-version: '8.4'
+            # XXX: experimental, for now.
+            experimental: true
+            do-leniency: true
+           - drupal-version: '11.2'
+            php-version: '8.5'
             # XXX: experimental, for now.
             experimental: true
             do-leniency: true
