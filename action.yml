@@ -140,7 +140,11 @@ runs:
         fi
 
         if [[ "${{ github.event_name }}" == "workflow_dispatch" ]] ; then
-          VERSION_SPEC="${{ github.ref_name }}"
+          if [[ "${{ github.ref_type }}" == "branch" ]] ; then
+            VERSION_SPEC="dev-${{ github.ref_name }}"
+          else
+            VERSION_SPEC="${{ github.ref_name }}"
+          fi
         else
           VERSION_SPEC="dev-${{ github.sha }}"
         fi
