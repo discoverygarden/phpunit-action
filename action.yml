@@ -139,7 +139,15 @@ runs:
           echo "Not doing the lenient thing."
         fi
 
-        VERSION_SPEC="dev-${{ github.sha }}"
+        if [[ "${{ github.event_name }}" == "workflow_dispatch" ]] ; then
+          if [[ "${{ github.ref_type }}" == "branch" ]] ; then
+            VERSION_SPEC="dev-${{ github.ref_name }}"
+          else
+            VERSION_SPEC="${{ github.ref_name }}"
+          fi
+        else
+          VERSION_SPEC="dev-${{ github.sha }}"
+        fi
 
         composer require --update-with-all-dependencies ${{ env.COMPOSER_PACKAGE_PREREQUISITES }} ${{ env.ADDITIONAL_COMPOSER_PACKAGE_PREREQUISITES }} \
           "${{ inputs.composer_package }}:$VERSION_SPEC"
