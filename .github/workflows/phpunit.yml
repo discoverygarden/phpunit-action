@@ -60,8 +60,7 @@ jobs:
           #  do-leniency: true
           - drupal-version: '11.3'
             php-version: '8.4'
-            # XXX: experimental, for now.
-            experimental: true
+            experimental: false
             do-leniency: true
           - drupal-version: '11.3'
             php-version: '8.5'
