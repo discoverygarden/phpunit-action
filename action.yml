@@ -205,7 +205,7 @@ runs:
       run: |
         echo "::group::Run PHPUnit tests (base)"
         su "$APACHE_USER" -s /bin/bash <<-EOS
-        phpunit "--bootstrap=$DRUPAL_WEB_ROOT/core/tests/bootstrap.php" --group ${{ inputs.drupal_extension }} --verbose "$GITHUB_WORKSPACE"
+        phpunit "--bootstrap=$DRUPAL_WEB_ROOT/core/tests/bootstrap.php" --group ${{ inputs.drupal_extension }} "$GITHUB_WORKSPACE"
         EOS
         echo "::endgroup::"
       shell: bash
@@ -222,7 +222,7 @@ runs:
       run: |
         echo "::group::Run PHPUnit tests (reporting deprecations)"
         su "$APACHE_USER" -s /bin/bash <<-EOS
-        phpunit "--configuration=$DRUPAL_WEB_ROOT/core/phpunit.xml.dist" --group ${{ inputs.drupal_extension }} --verbose "$GITHUB_WORKSPACE"
+        phpunit "--configuration=$DRUPAL_WEB_ROOT/core/phpunit.xml.dist" --group ${{ inputs.drupal_extension }} "$GITHUB_WORKSPACE"
         EOS
         echo "::endgroup::"
       shell: bash
