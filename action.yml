@@ -158,7 +158,7 @@ runs:
         # > ensure that it is present.
         # ... so let's add it as well...
 
-        composer require --dev --update-with-all-dependencies "drupal/core-dev:^${{ inputs.drupal-version }}" phpspec/prophecy-phpunit:^2
+        composer require --dev --update-with-all-dependencies "drupal/core-dev:~${{ inputs.drupal-version }}.0" phpspec/prophecy-phpunit:^2
 
         # Install Drush.
         composer require --update-with-all-dependencies ${{ inputs.drush-spec }}
@@ -175,8 +175,9 @@ runs:
         # "require-dev" doesn't quite do the trick, as it's only usable at the
         # root-project level.
         COMPOSER_PACKAGE_PREREQUISITES: >-
-          "drupal/test_support:^1"
+          "discoverygarden/test_support:dev-main as 1.x-dev"
           "discoverygarden/islandora_test_support:^1"
+          "drupal/geolocation:3.x-dev"
         ADDITIONAL_COMPOSER_PACKAGE_PREREQUISITES: ${{ inputs.composer_package_prerequisites }}
         # Patches need to be publically accessible, presently (so no private PRs,
         # at present).
@@ -186,7 +187,8 @@ runs:
               "Referencable unpublished nodes": "https://www.drupal.org/files/issues/2022-06-17/2845144-67.patch"
             },
             "drupal/migrate_directory": {
-              "Custom iterator for memory optimization": "https://www.drupal.org/files/issues/2023-03-03/3344946-iterator.patch"
+              "D11 support": "https://www.drupal.org/files/issues/2025-01-12/migrate_directory.2.x-dev.rector.patch",
+              "https://www.drupal.org/project/migrate_directory/issues/3594904": "https://git.drupalcode.org/project/migrate_directory/-/commit/e303f73ef1f8738f5098b3328c23ccb7cac02bbf.diff"
             }
           }
         ADDITIONAL_COMPOSER_PATCHES: ${{ inputs.composer_patches }}
@@ -205,7 +207,7 @@ runs:
       run: |
         echo "::group::Run PHPUnit tests (base)"
         su "$APACHE_USER" -s /bin/bash <<-EOS
-        phpunit "--bootstrap=$DRUPAL_WEB_ROOT/core/tests/bootstrap.php" --group ${{ inputs.drupal_extension }} --verbose "$GITHUB_WORKSPACE"
+        phpunit "--bootstrap=$DRUPAL_WEB_ROOT/core/tests/bootstrap.php" --group ${{ inputs.drupal_extension }} "$GITHUB_WORKSPACE"
         EOS
         echo "::endgroup::"
       shell: bash
@@ -222,7 +224,7 @@ runs:
       run: |
         echo "::group::Run PHPUnit tests (reporting deprecations)"
         su "$APACHE_USER" -s /bin/bash <<-EOS
-        phpunit "--configuration=$DRUPAL_WEB_ROOT/core/phpunit.xml.dist" --group ${{ inputs.drupal_extension }} --verbose "$GITHUB_WORKSPACE"
+        phpunit "--configuration=$DRUPAL_WEB_ROOT/core/phpunit.xml.dist" --group ${{ inputs.drupal_extension }} "$GITHUB_WORKSPACE"
         EOS
         echo "::endgroup::"
       shell: bash

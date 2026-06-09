@@ -27,37 +27,6 @@ jobs:
         experimental: [false]
         do-leniency: [true]
         include:
-          # XXX: There's no image for 10.5 / PHP 8.2: https://github.com/docker-library/drupal/tree/master/10.5
-          #- drupal-version: '10.5'
-          #  php-version: '8.2'
-          #  experimental: false
-          #  do-leniency: false
-          - drupal-version: '10.6'
-            php-version: '8.3'
-            # XXX: experimental, for now.
-            experimental: true
-            do-leniency: true
-          - drupal-version: '10.6'
-            php-version: '8.4'
-            # XXX: experimental, for now.
-            experimental: true
-            do-leniency: true
-          - drupal-version: '11.2'
-            php-version: '8.3'
-            # XXX: experimental, for now.
-            experimental: true
-            do-leniency: true
-          - drupal-version: '11.2'
-            php-version: '8.4'
-            # XXX: experimental, for now.
-            experimental: true
-            do-leniency: true
-          # XXX: There's no image for 11.2 / PHP 8.5: https://github.com/docker-library/drupal/tree/master/11.2
-          #- drupal-version: '11.2'
-          #  php-version: '8.5'
-          #  # XXX: experimental, for now.
-          #  experimental: true
-          #  do-leniency: true
           - drupal-version: '11.3'
             php-version: '8.4'
             experimental: false
