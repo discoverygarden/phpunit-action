@@ -177,7 +177,7 @@ runs:
         COMPOSER_PACKAGE_PREREQUISITES: >-
           "discoverygarden/test_support:dev-main as 1.x-dev"
           "discoverygarden/islandora_test_support:^1"
-          "drupal/geolocation:dev-8.x-3.x-dev as 3.x-dev"
+          "drupal/geolocation:3.x-dev"
         ADDITIONAL_COMPOSER_PACKAGE_PREREQUISITES: ${{ inputs.composer_package_prerequisites }}
         # Patches need to be publically accessible, presently (so no private PRs,
         # at present).
