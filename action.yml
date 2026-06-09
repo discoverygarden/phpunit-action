@@ -187,7 +187,8 @@ runs:
               "Referencable unpublished nodes": "https://www.drupal.org/files/issues/2022-06-17/2845144-67.patch"
             },
             "drupal/migrate_directory": {
-              "Custom iterator for memory optimization": "https://www.drupal.org/files/issues/2023-03-03/3344946-iterator.patch"
+              "D11 support": "https://www.drupal.org/files/issues/2025-01-12/migrate_directory.2.x-dev.rector.patch",
+              "https://www.drupal.org/project/migrate_directory/issues/3594904": "https://git.drupalcode.org/project/migrate_directory/-/commit/e303f73ef1f8738f5098b3328c23ccb7cac02bbf.diff"
             }
           }
         ADDITIONAL_COMPOSER_PATCHES: ${{ inputs.composer_patches }}
