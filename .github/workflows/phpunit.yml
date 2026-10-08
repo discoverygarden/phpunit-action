@@ -13,6 +13,10 @@ on:
         required: false
         type: string
         default: '[]'
+      extra-plugins:
+        required: false
+        type: string
+        default: '[]'
 
 jobs:
   PHPUnit:
@@ -75,4 +79,5 @@ jobs:
           experimental: ${{ matrix.experimental }}
           do-leniency: ${{ matrix.do-leniency }}
           lenient-packages: ${{ inputs.lenient-packages }}
+          extra-plugins: ${{ inputs.extra-plugins }}
           #matrix-patches: ${{ matrix.patches }}
