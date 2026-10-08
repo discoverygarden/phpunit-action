@@ -59,6 +59,8 @@ inputs:
     default: '[]'
   matrix-patches:
     default: '{}'
+  extra-plugins:
+    default: '[]'
 
 runs:
   using: "composite"
@@ -85,6 +87,10 @@ runs:
         if [ -n "${{ inputs.composer-auth }}" ] ; then
           echo '${{ inputs.composer-auth }}' > auth.json
         fi
+
+        for i in $(jq -r '.[]' <<<'${{ inputs.extra-plugins }}') ; do
+          composer config -- "allow-plugins.$i" true
+        done
 
         # Setup our repos.
         # XXX: We don't want the default Drupal thing first (it'll be readded
@@ -163,6 +169,11 @@ runs:
         # Install Drush.
         composer require --update-with-all-dependencies ${{ inputs.drush-spec }}
 
+        # If we happen to be running cweagan/composer-patches:^2 by some means, make sure patches are applied.
+        if composer patches-relock ; then
+          composer patches-repatch
+        fi
+
         # Install the site.
         drush --uri=http://localhost --yes -v site:install minimal --db-url="pgsql://${{ inputs.postgres_user }}:${{ inputs.postgres_password }}@postgres/${{ inputs.postgres_db}}" install_configure_form.enable_update_status_emails=NULL
 
@@ -181,16 +192,7 @@ runs:
         ADDITIONAL_COMPOSER_PACKAGE_PREREQUISITES: ${{ inputs.composer_package_prerequisites }}
         # Patches need to be publically accessible, presently (so no private PRs,
         # at present).
-        COMPOSER_PATCHES: |-
-          {
-            "drupal/core": {
-              "Referencable unpublished nodes": "https://www.drupal.org/files/issues/2022-06-17/2845144-67.patch"
-            },
-            "drupal/migrate_directory": {
-              "D11 support": "https://www.drupal.org/files/issues/2025-01-12/migrate_directory.2.x-dev.rector.patch",
-              "https://www.drupal.org/project/migrate_directory/issues/3594904": "https://git.drupalcode.org/project/migrate_directory/-/commit/e303f73ef1f8738f5098b3328c23ccb7cac02bbf.diff"
-            }
-          }
+        COMPOSER_PATCHES: '{}'
         ADDITIONAL_COMPOSER_PATCHES: ${{ inputs.composer_patches }}
         APACHE_USER: ${{ inputs.apache_user }}
         APACHE_GROUP: ${{ inputs.apache_group }}

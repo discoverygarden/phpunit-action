@@ -13,6 +13,10 @@ on:
         required: false
         type: string
         default: '[]'
+      extra-plugins:
+        required: false
+        type: string
+        default: '[]'
 
 jobs:
   PHPUnit:
@@ -25,15 +29,8 @@ jobs:
           - '8.4'
         experimental: [false]
         do-leniency: [true]
+        matrix-patches: ['{}']
         include:
-          - drupal-version: '10.6'
-            php-version: '8.3'
-            experimental: true
-            do-leniency: true
-          - drupal-version: '10.6'
-            php-version: '8.4'
-            experimental: true
-            do-leniency: true
           - drupal-version: '11.3'
             php-version: '8.5'
             # XXX: experimental, for now.
@@ -65,7 +62,8 @@ jobs:
           apt-get install -y postgresql-client
           PGHOST=postgres PGUSER=drupal PGPASSWORD=drupal psql --command='CREATE EXTENSION pg_trgm;' drupal
       - name: Run PHPUnit Action
-        uses: discoverygarden/phpunit-action@v1
+        uses: discoverygarden/phpunit-action@fix/newer-patches
+        #uses: discoverygarden/phpunit-action@v1
         with:
           composer_package_prerequisites: ${{ inputs.composer_prereqs }}
           composer_patches: ${{ inputs.composer_patches }}
@@ -74,4 +72,5 @@ jobs:
           experimental: ${{ matrix.experimental }}
           do-leniency: ${{ matrix.do-leniency }}
           lenient-packages: ${{ inputs.lenient-packages }}
+          extra-plugins: ${{ inputs.extra-plugins }}
           #matrix-patches: ${{ matrix.patches }}
