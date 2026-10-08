@@ -59,6 +59,8 @@ inputs:
     default: '[]'
   matrix-patches:
     default: '{}'
+  extra-plugins:
+    default: '[]'
 
 runs:
   using: "composite"
@@ -85,6 +87,10 @@ runs:
         if [ -n "${{ inputs.composer-auth }}" ] ; then
           echo '${{ inputs.composer-auth }}' > auth.json
         fi
+
+        for i in $(jq -r '.[]' <<<'${{ inputs.extra-plugins }}') ; do
+          composer config -- "allow-plugins.$i" true
+        done
 
         # Setup our repos.
         # XXX: We don't want the default Drupal thing first (it'll be readded
